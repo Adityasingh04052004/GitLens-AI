@@ -1,31 +1,38 @@
 import React, { useState, useEffect } from 'react'
 import { 
   FaGithub, 
-  FaSpinner, 
-  FaTriangleExclamation, 
-  FaCircleCheck, 
-  FaFolder, 
+  FaCode, 
   FaFileCode, 
-  FaCpu, 
+  FaMicrochip, 
   FaLightbulb, 
-  FaTerminal 
+  FaTerminal, 
+  FaFolder, 
+  FaArrowRight, 
+  FaSpinner, 
+  FaCircleCheck,
+  FaCodeBranch
 } from 'react-icons/fa6'
 
-function App() {
+// Modular Component Imports
+import Navbar from './components/Navbar.jsx'
+import Hero from './components/Hero.jsx'
+import UrlInput from './components/UrlInput.jsx'
+import FeatureCard from './components/FeatureCard.jsx'
+
+export default function App() {
   const [url, setUrl] = useState('')
-  const [error, setError] = useState('')
   const [status, setStatus] = useState('idle') // idle, analyzing, completed
   const [loadingStep, setLoadingStep] = useState(0)
 
   const loadingMessages = [
-    'Initializing secure workspace...',
-    'Cloning remote GitHub repository...',
-    'Analyzing folder structures and files...',
-    'Detecting languages and frameworks...',
-    'Synthesizing AI project summary...'
+    'Configuring secure workspace container...',
+    'Cloning remote GitHub repository assets...',
+    'Analyzing directory trees and files map...',
+    'Detecting tech stack configurations...',
+    'Synthesizing AI project architectural summary...'
   ]
 
-  // Simulate progress steps for a rich loading experience
+  // Simulate progress loading steps
   useEffect(() => {
     let interval
     if (status === 'analyzing') {
@@ -36,289 +43,247 @@ function App() {
             return prev + 1
           } else {
             clearInterval(interval)
-            // Wait 1 more second after final step, then complete
-            setTimeout(() => setStatus('completed'), 1000)
+            setTimeout(() => setStatus('completed'), 850)
             return prev
           }
         })
-      }, 1500)
+      }, 1200)
     }
     return () => clearInterval(interval)
   }, [status])
 
-  // Validate GitHub URL
-  const validateGithubUrl = (inputUrl) => {
-    const trimmed = inputUrl.trim()
-    if (!trimmed) {
-      return 'Repository URL is required.'
-    }
-    // Basic regex validation for public GitHub repositories
-    const githubRegex = /^https?:\/\/(www\.)?github\.com\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_.-]+(\/)?$/
-    if (!githubRegex.test(trimmed)) {
-      return 'Please enter a valid public GitHub repository URL (e.g., https://github.com/user/repo).'
-    }
-    return ''
-  }
-
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    const validationError = validateGithubUrl(url)
-    if (validationError) {
-      setError(validationError)
-      return
-    }
-    setError('')
+  const handleUrlSubmit = (submittedUrl) => {
+    setUrl(submittedUrl)
     setStatus('analyzing')
   }
 
   const handleReset = () => {
     setUrl('')
-    setError('')
     setStatus('idle')
   }
 
-  return (
-    <div className="min-h-screen bg-[#0B0F19] text-slate-100 flex flex-col font-sans relative overflow-hidden">
-      
-      {/* Decorative Background Glows */}
-      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-blue-500/10 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none" />
+  const features = [
+    {
+      icon: FaCodeBranch,
+      title: 'Repository Cloning',
+      description: 'Programmatically clones public repositories into a temporary workspace to check configurations.',
+      badge: 'Git Engine'
+    },
+    {
+      icon: FaFolder,
+      title: 'File Tree Mapping',
+      description: 'Traverses folder structures to index codebase maps and file configurations.',
+      badge: 'File API'
+    },
+    {
+      icon: FaMicrochip,
+      title: 'Stack Detection',
+      description: 'Scans config files and scripts to auto-identify frameworks, databases, and languages.',
+      badge: 'Auto Detector'
+    },
+    {
+      icon: FaLightbulb,
+      title: 'AI Codebase Summary',
+      description: 'Leverages Gemini LLM to interpret repository structures and explain features.',
+      badge: 'Gemini AI'
+    }
+  ]
 
-      {/* Header */}
-      <header className="border-b border-slate-800/80 bg-slate-900/30 backdrop-blur-md px-6 py-4 flex items-center justify-between z-10">
-        <div className="flex items-center gap-3 cursor-pointer" onClick={handleReset}>
-          <div className="bg-gradient-to-tr from-blue-600 to-indigo-600 p-2.5 rounded-xl shadow-lg shadow-blue-500/20">
-            <FaTerminal className="text-white text-lg" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white via-slate-100 to-slate-400 bg-clip-text text-transparent">
-              GitLens AI
-            </h1>
-            <span className="text-[10px] uppercase tracking-widest text-blue-400 font-semibold">Codebase Assistant</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-4">
-          <a 
-            href="https://github.com" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-slate-400 hover:text-white transition-colors"
-          >
-            <FaGithub className="text-xl" />
-          </a>
-        </div>
-      </header>
+  return (
+    <div className="min-h-screen bg-[#090A0C] text-zinc-100 flex flex-col font-sans relative overflow-x-hidden selection:bg-zinc-800 selection:text-white">
+      
+      {/* Super Subtle Ambient Glow */}
+      <div className="absolute top-0 left-1/4 -z-20 h-[500px] w-[500px] rounded-full bg-zinc-700/2 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 right-1/4 -z-20 h-[500px] w-[500px] rounded-full bg-zinc-700/2 blur-[100px] pointer-events-none" />
+
+      {/* 1. Navbar */}
+      <Navbar onReset={handleReset} />
 
       {/* Main Content Area */}
-      <main className="flex-1 flex flex-col items-center justify-center p-6 z-10">
-        
-        {/* STATE 1: IDLE / INPUT */}
+      <main className="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 z-10">
+
+        {/* STATE 1: IDLE / LANDING PAGE */}
         {status === 'idle' && (
-          <div className="max-w-2xl w-full text-center space-y-8 py-12">
-            <div className="space-y-4">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-blue-500/30 bg-blue-500/5 text-blue-400 text-xs font-medium animate-pulse">
-                <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                Empowered by Gemini AI
-              </div>
-              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white leading-tight">
-                Understand Any GitHub Codebase <br />
-                <span className="bg-gradient-to-r from-blue-400 via-indigo-400 to-purple-500 bg-clip-text text-transparent">
-                  In Seconds.
-                </span>
-              </h2>
-              <p className="text-slate-400 text-base md:text-lg max-w-lg mx-auto">
-                Paste a public GitHub URL to clone, automatically detect its technical stack, generate files tree, and unlock AI-powered summaries.
-              </p>
-            </div>
+          <div className="w-full flex flex-col items-center animate-fade-in">
+            
+            {/* Hero & URL Input */}
+            <Hero>
+              <UrlInput onSubmit={handleUrlSubmit} />
+            </Hero>
 
-            {/* Input Form */}
-            <form onSubmit={handleSubmit} className="max-w-xl mx-auto space-y-4">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl blur-[2px] opacity-20 group-focus-within:opacity-40 transition-opacity" />
-                <div className="relative flex items-center bg-slate-900/80 border border-slate-800 rounded-2xl p-2 group-focus-within:border-slate-700 transition-all">
-                  <div className="pl-3 text-slate-500">
-                    <FaGithub className="text-xl" />
+            {/* Feature Cards Grid Section */}
+            <section id="features" className="w-full max-w-4xl py-12 border-t border-zinc-900/60 mt-4">
+              <div className="text-center space-y-1.5 mb-8">
+                <h3 className="text-xl font-bold tracking-tight text-zinc-100">Engineered For Detail</h3>
+                <p className="text-xs text-zinc-450 max-w-sm mx-auto">
+                  Execute static configurations and structure mapping for complete codebase visibility.
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                {features.map((feature, idx) => (
+                  <div key={idx} className="animate-slide-up" style={{ animationDelay: `${idx * 80}ms` }}>
+                    <FeatureCard
+                      icon={feature.icon}
+                      title={feature.title}
+                      description={feature.description}
+                      badge={feature.badge}
+                    />
                   </div>
-                  <input
-                    type="text"
-                    value={url}
-                    onChange={(e) => setUrl(e.target.value)}
-                    placeholder="https://github.com/username/repository"
-                    className="w-full bg-transparent border-0 outline-none px-3 py-3 text-sm text-slate-100 placeholder-slate-500 focus:ring-0"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm px-6 py-3 rounded-xl transition-all shadow-md shadow-blue-500/10 active:scale-[0.98] cursor-pointer"
-                  >
-                    Analyze
-                  </button>
-                </div>
+                ))}
               </div>
+            </section>
 
-              {error && (
-                <div className="flex items-center gap-2 text-red-400 text-xs justify-center bg-red-950/20 border border-red-900/30 py-2.5 px-4 rounded-lg">
-                  <FaTriangleExclamation />
-                  <span>{error}</span>
-                </div>
-              )}
-            </form>
-
-            {/* Micro details / Feature Badges */}
-            <div className="pt-6 grid grid-cols-3 gap-4 max-w-lg mx-auto text-xs text-slate-500">
-              <div className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-slate-900/20 border border-slate-800/40">
-                <FaFolder className="text-slate-400 text-sm" />
-                <span>Tree Mapper</span>
-              </div>
-              <div className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-slate-900/20 border border-slate-800/40">
-                <FaCpu className="text-slate-400 text-sm" />
-                <span>Tech Detector</span>
-              </div>
-              <div className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-slate-900/20 border border-slate-800/40">
-                <FaLightbulb className="text-slate-400 text-sm" />
-                <span>AI Explainer</span>
-              </div>
-            </div>
           </div>
         )}
 
-        {/* STATE 2: ANALYZING / LOADING */}
+        {/* STATE 2: ANALYZING / PROGRESSIVE LOGS */}
         {status === 'analyzing' && (
-          <div className="max-w-md w-full p-8 rounded-2xl bg-slate-900/40 border border-slate-850 backdrop-blur-md text-center space-y-6">
-            <div className="relative inline-flex items-center justify-center">
-              <div className="w-16 h-16 rounded-full border-4 border-slate-800 border-t-blue-500 animate-spin" />
-              <div className="absolute text-blue-400">
-                <FaSpinner className="text-lg animate-pulse" />
+          <div className="w-full max-w-md p-7 rounded-xl border border-zinc-900 bg-zinc-955/20 backdrop-blur-md text-center space-y-5 animate-slide-up">
+            
+            {/* Clean Gray Spinner */}
+            <div className="relative inline-flex items-center justify-center mx-auto">
+              <div className="w-12 h-12 rounded-full border-2 border-zinc-900 border-t-zinc-300 animate-spin" />
+              <div className="absolute text-zinc-550">
+                <FaSpinner className="text-xs animate-pulse" />
               </div>
             </div>
 
-            <div className="space-y-2">
-              <h3 className="text-lg font-semibold text-white">Analyzing Codebase</h3>
-              <p className="text-sm text-slate-400 min-h-[20px] transition-all">
+            <div className="space-y-1">
+              <h3 className="text-sm font-bold text-zinc-150 tracking-tight">Analyzing Codebase</h3>
+              <p className="text-xs text-zinc-450 h-5 transition-all">
                 {loadingMessages[loadingStep]}
               </p>
             </div>
 
-            {/* Progress Bar */}
-            <div className="w-full bg-slate-800 h-1.5 rounded-full overflow-hidden">
+            {/* Dynamic Progress Bar */}
+            <div className="w-full bg-zinc-900 h-0.5 rounded-full overflow-hidden">
               <div 
-                className="bg-gradient-to-r from-blue-500 to-indigo-500 h-full transition-all duration-500 ease-out"
+                className="bg-zinc-350 h-full transition-all duration-500 ease-out"
                 style={{ width: `${((loadingStep + 1) / loadingMessages.length) * 100}%` }}
               />
             </div>
 
-            {/* Progressive Logging terminal */}
-            <div className="bg-slate-950/80 rounded-xl p-4 border border-slate-850 text-left font-mono text-[11px] text-slate-400 space-y-1 max-h-[140px] overflow-y-auto">
+            {/* Logging Terminal */}
+            <div className="bg-zinc-955/40 rounded-lg p-3.5 border border-zinc-900 text-left font-mono text-[10px] text-zinc-550 space-y-2 max-h-[150px] overflow-y-auto">
               {loadingMessages.map((msg, index) => (
-                <div key={index} className={`flex items-start gap-2 ${index > loadingStep ? 'opacity-20' : 'opacity-100'}`}>
-                  <span className="text-blue-500 font-bold select-none">&gt;</span>
-                  <span className={index === loadingStep ? 'text-blue-400 font-medium' : ''}>
+                <div 
+                  key={index} 
+                  className={`flex items-start gap-2.5 transition-all duration-200 ${index > loadingStep ? 'opacity-10' : 'opacity-100'}`}
+                >
+                  <span className="text-zinc-650 font-bold select-none">&gt;</span>
+                  <span className={index === loadingStep ? 'text-zinc-200 font-semibold' : ''}>
                     {msg} {index < loadingStep && '✓'}
                   </span>
                 </div>
               ))}
             </div>
+
           </div>
         )}
 
-        {/* STATE 3: COMPLETED / MOCK WORKSPACE PREVIEW */}
+        {/* STATE 3: COMPLETED / DEVELOPER WORKSPACE PREVIEW */}
         {status === 'completed' && (
-          <div className="w-full max-w-6xl flex flex-col space-y-6 py-6 animate-fadeIn">
+          <div className="w-full max-w-5xl flex flex-col space-y-5 py-6 animate-fade-in">
             
             {/* Dashboard Header Bar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-900/30 border border-slate-800/80 backdrop-blur-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-zinc-955/20 border border-zinc-900 backdrop-blur-sm">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-semibold px-2.5 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-blue-400">Public</span>
-                  <h3 className="text-lg font-bold text-white tracking-tight">
-                    {url.split('/').pop() || 'mock-repository'}
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-400 uppercase tracking-tight">Repository</span>
+                  <h3 className="text-sm font-bold text-zinc-100 tracking-tight">
+                    {url.split('/').pop() || 'repository-name'}
                   </h3>
                 </div>
-                <p className="text-xs text-slate-400 truncate max-w-md mt-1">{url}</p>
+                <p className="text-[10px] text-zinc-555 truncate max-w-sm sm:max-w-md mt-1">{url}</p>
               </div>
               <button 
                 onClick={handleReset}
-                className="text-xs text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 px-4 py-2.5 rounded-lg border border-slate-700/60 transition-all font-medium cursor-pointer"
+                className="text-[11px] text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-850 px-4 py-2 rounded-lg border border-zinc-800 transition-colors font-semibold cursor-pointer"
               >
-                Analyze Another URL
+                Reset Analysis
               </button>
             </div>
 
             {/* Dashboard Layout Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
               
-              {/* Left Column: Repository Tree Panel (3 Cols) */}
-              <div className="lg:col-span-4 flex flex-col rounded-xl bg-slate-900/20 border border-slate-800/80 backdrop-blur-sm overflow-hidden min-h-[450px]">
-                <div className="px-4 py-3.5 border-b border-slate-800/80 bg-slate-900/40 flex items-center gap-2">
-                  <FaFolder className="text-slate-400 text-sm" />
-                  <span className="text-xs font-semibold tracking-wider uppercase text-slate-400">Repository Tree</span>
+              {/* Left Column: Repository Tree Panel (4 Cols) */}
+              <div className="lg:col-span-4 flex flex-col rounded-xl bg-zinc-950/10 border border-zinc-900 backdrop-blur-sm overflow-hidden min-h-[440px]">
+                <div className="px-3.5 py-2.5 border-b border-zinc-900/60 bg-zinc-900/20 flex items-center gap-2">
+                  <FaFolder className="text-zinc-500 text-xs" />
+                  <span className="text-[10px] font-bold tracking-wider uppercase text-zinc-400">File Structure</span>
                 </div>
-                <div className="p-4 flex-1 font-mono text-xs text-slate-300 space-y-2 overflow-y-auto">
-                  <div className="text-slate-500 italic text-[11px] mb-2">// Sample repository layout map</div>
-                  <div className="flex items-center gap-1.5"><FaFolder className="text-blue-400" /> client</div>
-                  <div className="flex items-center gap-1.5 pl-4"><FaFolder className="text-blue-400" /> src</div>
-                  <div className="flex items-center gap-1.5 pl-8"><FaFolder className="text-blue-400" /> components</div>
-                  <div className="flex items-center gap-1.5 pl-12"><FaFileCode className="text-emerald-400" /> Button.jsx</div>
-                  <div className="flex items-center gap-1.5 pl-8"><FaFolder className="text-blue-400" /> pages</div>
-                  <div className="flex items-center gap-1.5 pl-12"><FaFileCode className="text-emerald-400" /> Home.jsx</div>
-                  <div className="flex items-center gap-1.5 pl-8"><FaFileCode className="text-emerald-400" /> App.jsx</div>
-                  <div className="flex items-center gap-1.5 pl-4"><FaFileCode className="text-slate-400" /> package.json</div>
-                  <div className="flex items-center gap-1.5"><FaFolder className="text-blue-400" /> server</div>
-                  <div className="flex items-center gap-1.5 pl-4"><FaFolder className="text-blue-400" /> controllers</div>
-                  <div className="flex items-center gap-1.5 pl-8"><FaFileCode className="text-emerald-400" /> repoController.js</div>
-                  <div className="flex items-center gap-1.5 pl-4"><FaFileCode className="text-slate-400" /> server.js</div>
-                  <div className="flex items-center gap-1.5"><FaFileCode className="text-yellow-400" /> README.md</div>
+                <div className="p-4 flex-1 font-mono text-[10px] text-zinc-450 space-y-2.5 overflow-y-auto">
+                  <div className="text-zinc-600 italic text-[9px] mb-1.5">// Codebase file layout</div>
+                  <div className="flex items-center gap-1.5"><FaFolder className="text-zinc-650" /> client</div>
+                  <div className="flex items-center gap-1.5 pl-4"><FaFolder className="text-zinc-650" /> src</div>
+                  <div className="flex items-center gap-1.5 pl-8"><FaFolder className="text-zinc-650" /> components</div>
+                  <div className="flex items-center gap-1.5 pl-12"><FaFileCode className="text-zinc-500" /> Navbar.jsx</div>
+                  <div className="flex items-center gap-1.5 pl-12"><FaFileCode className="text-zinc-500" /> Hero.jsx</div>
+                  <div className="flex items-center gap-1.5 pl-12"><FaFileCode className="text-zinc-500" /> UrlInput.jsx</div>
+                  <div className="flex items-center gap-1.5 pl-12"><FaFileCode className="text-zinc-500" /> FeatureCard.jsx</div>
+                  <div className="flex items-center gap-1.5 pl-8"><FaFileCode className="text-zinc-555" /> App.jsx</div>
+                  <div className="flex items-center gap-1.5 pl-8"><FaFileCode className="text-zinc-555" /> main.jsx</div>
+                  <div className="flex items-center gap-1.5 pl-4"><FaFileCode className="text-zinc-600" /> package.json</div>
+                  <div className="flex items-center gap-1.5"><FaFolder className="text-zinc-655" /> server</div>
+                  <div className="flex items-center gap-1.5 pl-4"><FaFolder className="text-zinc-655" /> routes</div>
+                  <div className="flex items-center gap-1.5 pl-8"><FaFileCode className="text-zinc-555" /> repoRoutes.js</div>
+                  <div className="flex items-center gap-1.5 pl-4"><FaFileCode className="text-zinc-600" /> server.js</div>
+                  <div className="flex items-center gap-1.5"><FaFileCode className="text-zinc-500" /> README.md</div>
                 </div>
               </div>
 
               {/* Right Column: Summaries & Stack (8 Cols) */}
-              <div className="lg:col-span-8 flex flex-col space-y-6">
+              <div className="lg:col-span-8 flex flex-col space-y-5">
                 
-                {/* Detected Stack Panel */}
-                <div className="rounded-xl bg-slate-900/20 border border-slate-800/80 backdrop-blur-sm overflow-hidden">
-                  <div className="px-4 py-3.5 border-b border-slate-800/80 bg-slate-900/40 flex items-center gap-2">
-                    <FaCpu className="text-slate-400 text-sm" />
-                    <span className="text-xs font-semibold tracking-wider uppercase text-slate-400">Detected Technologies</span>
+                {/* Tech Stack Panel */}
+                <div className="rounded-xl bg-zinc-950/10 border border-zinc-900 backdrop-blur-sm overflow-hidden">
+                  <div className="px-3.5 py-2.5 border-b border-zinc-900/60 bg-zinc-900/20 flex items-center gap-2">
+                    <FaMicrochip className="text-zinc-500 text-xs" />
+                    <span className="text-[10px] font-bold tracking-wider uppercase text-zinc-400">Detected Stack</span>
                   </div>
-                  <div className="p-4 grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div className="p-3.5 rounded-lg bg-slate-900/40 border border-slate-800 flex flex-col gap-1 text-center">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Frontend</span>
-                      <span className="text-sm font-semibold text-white">React / Vite</span>
+                  <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-900 text-center space-y-1">
+                      <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider">Frontend</span>
+                      <p className="text-[11px] font-bold text-zinc-200">React / Vite</p>
                     </div>
-                    <div className="p-3.5 rounded-lg bg-slate-900/40 border border-slate-800 flex flex-col gap-1 text-center">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Backend</span>
-                      <span className="text-sm font-semibold text-white">Node / Express</span>
+                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-900 text-center space-y-1">
+                      <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider">Backend</span>
+                      <p className="text-[11px] font-bold text-zinc-200">Node / Express</p>
                     </div>
-                    <div className="p-3.5 rounded-lg bg-slate-900/40 border border-slate-800 flex flex-col gap-1 text-center">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Database</span>
-                      <span className="text-sm font-semibold text-white">MongoDB</span>
+                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-900 text-center space-y-1">
+                      <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider">Database</span>
+                      <p className="text-[11px] font-bold text-zinc-200">MongoDB</p>
                     </div>
-                    <div className="p-3.5 rounded-lg bg-slate-900/40 border border-slate-800 flex flex-col gap-1 text-center">
-                      <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Language</span>
-                      <span className="text-sm font-semibold text-white">JavaScript</span>
+                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-900 text-center space-y-1">
+                      <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider">Language</span>
+                      <p className="text-[11px] font-bold text-zinc-200">JavaScript</p>
                     </div>
                   </div>
                 </div>
 
                 {/* AI Summary Panel */}
-                <div className="flex-1 rounded-xl bg-slate-900/20 border border-slate-800/80 backdrop-blur-sm overflow-hidden flex flex-col min-h-[280px]">
-                  <div className="px-4 py-3.5 border-b border-slate-800/80 bg-slate-900/40 flex items-center justify-between">
+                <div className="flex-1 rounded-xl bg-zinc-950/10 border border-zinc-900 backdrop-blur-sm overflow-hidden flex flex-col min-h-[270px]">
+                  <div className="px-3.5 py-2.5 border-b border-zinc-900/60 bg-zinc-900/20 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <FaLightbulb className="text-yellow-400 text-sm" />
-                      <span className="text-xs font-semibold tracking-wider uppercase text-slate-400">AI Project Summary</span>
+                      <FaLightbulb className="text-zinc-500 text-xs" />
+                      <span className="text-[10px] font-bold tracking-wider uppercase text-zinc-400">AI Project Overview</span>
                     </div>
-                    <div className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded flex items-center gap-1 animate-pulse">
-                      <FaCircleCheck /> Ready
-                    </div>
+                    <span className="text-[8px] font-bold text-emerald-400 bg-emerald-950/10 border border-emerald-900/15 px-2 py-0.5 rounded flex items-center gap-1">
+                      <FaCircleCheck className="text-[9px]" /> Verified
+                    </span>
                   </div>
-                  <div className="p-6 flex-1 text-slate-300 text-sm leading-relaxed space-y-4">
-                    <p className="font-semibold text-white">
-                      This repository is a full-stack codebase utilizing JavaScript for both frontend and backend operations.
+                  
+                  <div className="p-5 flex-1 text-zinc-400 text-xs leading-relaxed space-y-3.5">
+                    <p className="font-bold text-zinc-200 text-sm">
+                      Structural evaluation of the cloned codebase layout:
                     </p>
                     <p>
-                      The frontend application is constructed using the modern React framework powered by Vite. It includes styling powered by Tailwind CSS. Code modularity is achieved through a clean component-based layout separating pages, reusable buttons/inputs, custom hooks, and services.
+                      The client application leverages React configured with Vite, utilizing modern ES Module patterns. CSS compilation is integrated into the bundler pipeline via Tailwind CSS v4, removing legacy configuration scripts. Components are built modularly, utilizing functional hooks and isolated state logic.
                     </p>
                     <p>
-                      The server-side application is built using Node.js and Express.js, exposing RESTful endpoints. The data storage relies on a MongoDB database, utilizing Mongoose as the object data modeling library. The codebase integrates GitHub via simple-git and processes codebase summaries utilizing Gemini API services.
+                      The server-side system is managed by Node.js and Express, exposing endpoints to clone repositories programmatically using Git commands. Mongoose structure links to a MongoDB instance. Codebase exploration prompts are handled dynamically through a modular Gemini AI layer.
                     </p>
                   </div>
                 </div>
@@ -332,11 +297,9 @@ function App() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-slate-800/50 py-4 px-6 text-center text-xs text-slate-500 z-10 bg-slate-950/30">
-        GitLens AI © {new Date().getFullYear()} — Production Ready Portfolio Project. Built with React & Node.
+      <footer className="border-t border-zinc-900/30 py-3.5 px-6 text-center text-[9px] text-zinc-650 z-10 bg-zinc-955/5">
+        GitLens AI © {new Date().getFullYear()} — Premium Full-Stack Portfolio. Built with React & Express.
       </footer>
     </div>
   )
 }
-
-export default App

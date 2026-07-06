@@ -20,7 +20,7 @@ node_modules/
 
 # IDE / System files
 .vscode/
-.idea/
+.idea/cd server
 .DS_Store
 Thumbs.db
 *.log
