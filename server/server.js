@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
+import repositoryRoutes from './routes/repositoryRoutes.js'
 
 // Load environment variables from .env file
 dotenv.config()
@@ -25,6 +26,9 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString()
   })
 })
+
+// Mounted API Routes
+app.use('/api/repository', repositoryRoutes)
 
 // Catch-all route handler for undefined endpoints
 app.use('*', (req, res, next) => {
