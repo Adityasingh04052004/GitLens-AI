@@ -1,0 +1,15 @@
+{
+  "name": "gitlens-ai",
+  "version": "1.0.0",
+  "description": "AI-powered GitHub Codebase Assistant",
+  "private": true,
+  "scripts": {
+    "install-all": "npm install --prefix client && npm install --prefix server",
+    "client": "npm run dev --prefix client",
+    "server": "npm run dev --prefix server",
+    "dev": "concurrently --kill-others \"npm run server\" \"npm run client\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

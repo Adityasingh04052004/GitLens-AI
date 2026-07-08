@@ -1,21 +1,28 @@
+import gitService from '../services/gitService.js'
+
 /**
  * Controller to handle codebase repository analysis.
  * 
  * @route POST /api/repository/analyze
- * @desc Receive a public GitHub URL, validate, and return the repository name.
+ * @desc Receive a public GitHub URL, clone the repository locally, and return status.
  */
 export const analyzeRepository = async (req, res, next) => {
   try {
     const { url } = req.body
 
-    // In Milestone 3, we only return the success state and URL.
-    // In future milestones, we will integrate git-cloning and AI services here.
+    // Trigger the repository cloning service
+    const { localPath, isDuplicate } = await gitService.cloneRepository(url)
+
+    // For Milestone 4, we return the status of the cloning operation.
+    // In the next milestones, we will parse the files inside localPath.
     return res.status(200).json({
       success: true,
-      repository: url
+      repository: url,
+      localPath,
+      isDuplicate
     })
   } catch (error) {
-    // If anything fails, pass the error to the global error handler middleware
+    // If the clone fails (e.g. repo doesn't exist, network error), catch it here
     next(error)
   }
 }
