@@ -1,28 +1,36 @@
 import gitService from '../services/gitService.js'
+import analyzerService from '../services/analyzerService.js'
+import techDetectorService from '../services/techDetectorService.js'
 
 /**
  * Controller to handle codebase repository analysis.
  * 
  * @route POST /api/repository/analyze
- * @desc Receive a public GitHub URL, clone the repository locally, and return status.
+ * @desc Receive a public GitHub URL, clone locally, parse config files, detect technology stack, and return payload.
  */
 export const analyzeRepository = async (req, res, next) => {
   try {
     const { url } = req.body
 
-    // Trigger the repository cloning service
+    // 1. Clone repository locally (or return local path if already cloned)
     const { localPath, isDuplicate } = await gitService.cloneRepository(url)
 
-    // For Milestone 4, we return the status of the cloning operation.
-    // In the next milestones, we will parse the files inside localPath.
+    // 2. Perform static analysis on the local clone (finding and reading target config files)
+    const analysis = await analyzerService.analyzeCodebase(localPath)
+
+    // 3. Auto-detect technologies and dependencies from config file contents
+    const technologies = techDetectorService.detectTechnologies(analysis.files)
+
+    // 4. Return the full validation, clone status, detected stack, and files payload
     return res.status(200).json({
       success: true,
       repository: url,
-      localPath,
-      isDuplicate
+      isDuplicate,
+      technologies,
+      files: analysis.files
     })
   } catch (error) {
-    // If the clone fails (e.g. repo doesn't exist, network error), catch it here
+    // Catch-all to forward errors to Express global handler
     next(error)
   }
 }
