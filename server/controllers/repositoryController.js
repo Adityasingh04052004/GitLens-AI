@@ -1,12 +1,13 @@
 import gitService from '../services/gitService.js'
 import analyzerService from '../services/analyzerService.js'
 import techDetectorService from '../services/techDetectorService.js'
+import treeService from '../services/treeService.js'
 
 /**
  * Controller to handle codebase repository analysis.
  * 
  * @route POST /api/repository/analyze
- * @desc Receive a public GitHub URL, clone locally, parse config files, detect technology stack, and return payload.
+ * @desc Receive a public GitHub URL, clone locally, parse config files, detect stack, generate file tree, and return payload.
  */
 export const analyzeRepository = async (req, res, next) => {
   try {
@@ -21,12 +22,16 @@ export const analyzeRepository = async (req, res, next) => {
     // 3. Auto-detect technologies and dependencies from config file contents
     const technologies = techDetectorService.detectTechnologies(analysis.files)
 
-    // 4. Return the full validation, clone status, detected stack, and files payload
+    // 4. Generate the directory tree structure
+    const tree = await treeService.generateRepoTree(localPath)
+
+    // 5. Return the full validation, clone status, detected stack, file tree, and files payload
     return res.status(200).json({
       success: true,
       repository: url,
       isDuplicate,
       technologies,
+      tree,
       files: analysis.files
     })
   } catch (error) {
