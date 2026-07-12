@@ -4,12 +4,7 @@ import { validateRepositoryUrl } from '../middleware/validation.js'
 
 const router = express.Router()
 
-/**
- * Route mapping for repository endpoints.
- * All routes here are prefixed with /api/repository (when mounted in server.js)
- */
-
-// POST /api/repository/analyze - Receive repo URL, validate, and return success payload
+// POST /api/repository/analyze - Analyze repo (clone, parse tech stack, tree, generate summary)
 router.post('/analyze', validateRepositoryUrl, analyzeRepository)
 
 export default router

@@ -2,12 +2,13 @@ import gitService from '../services/gitService.js'
 import analyzerService from '../services/analyzerService.js'
 import techDetectorService from '../services/techDetectorService.js'
 import treeService from '../services/treeService.js'
+import geminiService from '../services/geminiService.js'
 
 /**
  * Controller to handle codebase repository analysis.
  * 
  * @route POST /api/repository/analyze
- * @desc Receive a public GitHub URL, clone locally, parse config files, detect stack, generate file tree, and return payload.
+ * @desc Receive a public GitHub URL, clone locally, parse config files, detect stack, generate file tree, run AI summary, and return payload.
  */
 export const analyzeRepository = async (req, res, next) => {
   try {
@@ -25,13 +26,20 @@ export const analyzeRepository = async (req, res, next) => {
     // 4. Generate the directory tree structure
     const tree = await treeService.generateRepoTree(localPath)
 
-    // 5. Return the full validation, clone status, detected stack, file tree, and files payload
+    // 5. Extract repository name from URL (e.g. facebook/react -> react)
+    const repoName = url.split('/').filter(Boolean).pop() || 'repository'
+
+    // 6. Generate AI Codebase summary using Gemini (with automatic fallback warning if key is missing)
+    const summary = await geminiService.generateSummary(repoName, technologies, tree, analysis.files)
+
+    // 7. Return the full validation, clone status, detected stack, file tree, AI summary, and files payload
     return res.status(200).json({
       success: true,
       repository: url,
       isDuplicate,
       technologies,
       tree,
+      summary,
       files: analysis.files
     })
   } catch (error) {

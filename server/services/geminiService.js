@@ -6,8 +6,8 @@ class GeminiService {
     
     if (this.apiKey) {
       this.genAI = new GoogleGenerativeAI(this.apiKey)
-      // We use gemini-1.5-flash as the default model (fast and highly cost-efficient)
-      this.model = this.genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+      // Use gemini-flash-latest (stable Gemini 1.5 Flash with active free tier quotas)
+      this.model = this.genAI.getGenerativeModel({ model: 'gemini-flash-latest' })
     } else {
       console.warn('[GeminiService] Warning: GEMINI_API_KEY is not defined in .env. Falling back to template summaries.')
     }
@@ -105,6 +105,7 @@ Keep the tone professional, objective, and developer-oriented. Do not include pl
       return `### Analysis Summary for ${repoName}\n\n*Error generating live AI summary: ${error.message}*\n\n${this.generateMockSummary(repoName, technologies)}`
     }
   }
+
 
   /**
    * Helper fallback to return a detailed template summary if API credentials are not set.

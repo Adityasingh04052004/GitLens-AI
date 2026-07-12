@@ -1,9 +1,16 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FaGithub, FaTriangleExclamation } from 'react-icons/fa6'
 
-export default function UrlInput({ onSubmit }) {
+export default function UrlInput({ onSubmit, apiError }) {
   const [url, setUrl] = useState('')
   const [error, setError] = useState('')
+
+  // Sync external API errors into local display state
+  useEffect(() => {
+    if (apiError) {
+      setError(apiError)
+    }
+  }, [apiError])
 
   const validateUrl = (inputUrl) => {
     const trimmed = inputUrl.trim()
