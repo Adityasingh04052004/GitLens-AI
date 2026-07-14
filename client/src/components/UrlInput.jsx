@@ -39,10 +39,10 @@ export default function UrlInput({ onSubmit, apiError }) {
     <form onSubmit={handleSubmit} className="w-full space-y-3.5">
       
       {/* Structural Input Container */}
-      <div className="relative flex items-center bg-zinc-900/30 border border-zinc-850 rounded-xl p-1.5 focus-within:border-violet-600/60 transition-colors duration-250">
+      <div className="relative flex items-center bg-zinc-900/30 border border-zinc-850 rounded-xl p-1.5 focus-within:border-amber-600/60 transition-colors duration-250">
         
         {/* GitHub Icon */}
-        <div className="pl-3.5 text-zinc-550 focus-within:text-violet-400 transition-colors">
+        <div className="pl-3.5 text-zinc-550 focus-within:text-amber-400 transition-colors">
           <FaGithub className="text-lg" />
         </div>
 
@@ -61,7 +61,7 @@ export default function UrlInput({ onSubmit, apiError }) {
         {/* Vibrant Accent Button */}
         <button
           type="submit"
-          className="bg-gradient-to-r from-violet-600 to-indigo-650 hover:from-violet-500 hover:to-indigo-550 text-white font-bold text-xs px-5 py-2.5 rounded-lg shadow-md shadow-violet-650/10 active:scale-[0.99] cursor-pointer shrink-0 transition-all duration-200"
+          className="bg-gradient-to-r from-amber-600 to-rose-650 hover:from-amber-500 hover:to-rose-550 text-white font-bold text-xs px-5 py-2.5 rounded-lg shadow-md shadow-amber-950/10 active:scale-[0.99] cursor-pointer shrink-0 transition-all duration-200"
         >
           Analyze
         </button>

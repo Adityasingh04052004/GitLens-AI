@@ -2,10 +2,10 @@ import React from 'react'
 
 export default function FeatureCard({ icon: Icon, title, description, badge }) {
   return (
-    <div className="relative group rounded-xl border border-zinc-900 bg-zinc-950/10 p-5 backdrop-blur-sm hover:border-zinc-800/80 hover:bg-zinc-900/5 transition-all duration-250 flex items-start gap-4 text-left">
+    <div className="relative group rounded-xl border border-zinc-850/50 bg-zinc-955/10 p-5 backdrop-blur-sm hover:border-zinc-800/80 hover:bg-zinc-900/5 transition-all duration-250 flex items-start gap-4 text-left">
       
       {/* Icon Wrapper (Hover Highlights) */}
-      <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-850 bg-zinc-900/50 text-zinc-400 group-hover:text-violet-400 group-hover:border-violet-500/35 group-hover:bg-violet-600/5 transition-all duration-250 shrink-0">
+      <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-zinc-850 bg-zinc-900/50 text-zinc-400 group-hover:text-amber-400 group-hover:border-amber-500/35 group-hover:bg-amber-600/5 transition-all duration-250 shrink-0">
         <Icon className="text-base" />
       </div>
 
@@ -14,7 +14,7 @@ export default function FeatureCard({ icon: Icon, title, description, badge }) {
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-sm font-bold text-zinc-100 tracking-tight truncate">{title}</h3>
           {badge && (
-            <span className="rounded-md bg-violet-950/20 border border-violet-900/30 px-2 py-0.5 text-[9px] font-semibold text-violet-400/90 tracking-tight">
+            <span className="rounded-md bg-amber-950/15 border border-amber-900/20 px-2 py-0.5 text-[9px] font-semibold text-amber-300/80 tracking-tight">
               {badge}
             </span>
           )}

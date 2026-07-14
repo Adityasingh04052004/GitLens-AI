@@ -2,11 +2,12 @@ import React, { useState } from 'react'
 import axios from 'axios'
 import { 
   FaFolder, 
-  FaMicrochip, 
-  FaLightbulb, 
   FaSpinner, 
   FaCircleCheck,
-  FaCodeBranch
+  FaCodeBranch,
+  FaCompass,
+  FaLayerGroup,
+  FaBookOpen
 } from 'react-icons/fa6'
 
 // Modular Component Imports
@@ -24,12 +25,13 @@ export default function App() {
   const [repoData, setRepoData] = useState(null)
   const [apiError, setApiError] = useState('')
 
+  // Conversational and friendly loading logs
   const loadingMessages = [
-    'Configuring secure workspace container...',
-    'Cloning remote GitHub repository assets...',
-    'Analyzing directory trees and files map...',
-    'Detecting tech stack configurations...',
-    'Synthesizing AI project architectural summary...'
+    'Setting up a cozy workspace for your project...',
+    'Fetching the repository files from GitHub...',
+    'Reading through the directory structure...',
+    'Learning the technology stack and frameworks...',
+    'Writing down our custom architectural notes...'
   ]
 
   const handleUrlSubmit = async (submittedUrl) => {
@@ -38,10 +40,8 @@ export default function App() {
     setStatus('analyzing')
     setLoadingStep(0)
 
-    // Tick the loading logs slowly in the background during network request
     const stepInterval = setInterval(() => {
       setLoadingStep((prev) => {
-        // Hold at step 3 (stack detection) until we get the actual API response
         if (prev < 3) {
           return prev + 1
         }
@@ -50,17 +50,14 @@ export default function App() {
     }, 1200)
 
     try {
-      // POST request to our Express backend
       const response = await axios.post('http://127.0.0.1:5000/api/repository/analyze', {
         url: submittedUrl
       })
 
-      // Complete the loading step animation
       clearInterval(stepInterval)
       setLoadingStep(4)
       setRepoData(response.data)
 
-      // Short delay so the user sees the final step check off, then transition to dashboard
       setTimeout(() => {
         setStatus('completed')
       }, 850)
@@ -69,7 +66,6 @@ export default function App() {
       clearInterval(stepInterval)
       console.error('[App] Analysis call failed:', err)
 
-      // Extract validation errors or connection issues
       const errMsg = err.response?.data?.errors?.[0]?.message || 
                      err.response?.data?.message || 
                      'Unable to connect to the backend server. Make sure it is running in your terminal.'
@@ -90,42 +86,47 @@ export default function App() {
   const features = [
     {
       icon: FaCodeBranch,
-      title: 'Repository Cloning',
-      description: 'Programmatically clones public repositories into a temporary workspace to check configurations.',
-      badge: 'Git Engine'
+      title: 'Cozy Workspace',
+      description: 'We download public repositories into a temporary workspace so we can inspect them safely.',
+      badge: 'Git Fetch'
     },
     {
-      icon: FaFolder,
-      title: 'File Tree Mapping',
-      description: 'Traverses folder structures to index codebase maps and file configurations.',
-      badge: 'File API'
+      icon: FaCompass,
+      title: 'Visual Folder Map',
+      description: 'We trace the directory layout recursively to build a clean, interactively clickable file browser.',
+      badge: 'Visual Explorer'
     },
     {
-      icon: FaMicrochip,
-      title: 'Stack Detection',
-      description: 'Scans config files and scripts to auto-identify frameworks, databases, and languages.',
-      badge: 'Auto Detector'
+      icon: FaLayerGroup,
+      title: 'Smart Tech Finder',
+      description: 'We check configurations and settings files to auto-identify languages, databases, and frameworks.',
+      badge: 'Stack Lookup'
     },
     {
-      icon: FaLightbulb,
-      title: 'AI Codebase Summary',
-      description: 'Leverages Gemini LLM to interpret repository structures and explain features.',
-      badge: 'Gemini AI'
+      icon: FaBookOpen,
+      title: 'Friendly Tour Guide',
+      description: 'Gemini reads through your project configuration and drafts a detailed walkthrough.',
+      badge: 'Gemini Guide'
     }
   ]
 
-  // Helper function to format detected technology badges
   const getBadgeString = (techArray) => {
     if (!techArray || techArray.length === 0) return 'None detected'
     return techArray.join(' / ')
   }
 
   return (
-    <div className="min-h-screen bg-[#090A0C] text-zinc-100 flex flex-col font-sans relative overflow-x-hidden selection:bg-zinc-800 selection:text-white">
+    <div className="min-h-screen bg-[#090A0C] text-zinc-100 flex flex-col font-sans relative overflow-x-hidden selection:bg-amber-500/20 selection:text-amber-250">
       
-      {/* Super Subtle Ambient Glow */}
-      <div className="absolute top-0 left-1/4 -z-20 h-[500px] w-[500px] rounded-full bg-zinc-700/2 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 right-1/4 -z-20 h-[500px] w-[500px] rounded-full bg-zinc-700/2 blur-[100px] pointer-events-none" />
+      {/* Cozy, organic background ambient glows */}
+      <div 
+        className="absolute top-0 left-1/3 -z-20 h-[600px] w-[600px] rounded-full bg-amber-900/4 blur-[130px] pointer-events-none animate-pulse" 
+        style={{ animationDuration: '8s' }} 
+      />
+      <div 
+        className="absolute bottom-0 right-1/3 -z-20 h-[600px] w-[600px] rounded-full bg-rose-950/3 blur-[130px] pointer-events-none animate-pulse" 
+        style={{ animationDuration: '10s' }} 
+      />
 
       {/* 1. Navbar */}
       <Navbar onReset={handleReset} />
@@ -144,10 +145,10 @@ export default function App() {
 
             {/* Feature Cards Grid Section */}
             <section id="features" className="w-full max-w-4xl py-12 border-t border-zinc-900/60 mt-4">
-              <div className="text-center space-y-1.5 mb-8">
-                <h3 className="text-sm font-bold tracking-tight text-zinc-100 uppercase">Engineered For Detail</h3>
-                <p className="text-xs text-zinc-455 max-w-sm mx-auto">
-                  Execute static configurations and structure mapping for complete codebase visibility.
+              <div className="text-center space-y-2 mb-8">
+                <h3 className="text-sm font-serif text-zinc-100 tracking-wide">Designed for Developers</h3>
+                <p className="text-[11px] text-zinc-450 max-w-sm mx-auto">
+                  A simple static scanner to map layout paths and identify tech frameworks.
                 </p>
               </div>
 
@@ -170,27 +171,27 @@ export default function App() {
 
         {/* STATE 2: ANALYZING / PROGRESSIVE LOGS */}
         {status === 'analyzing' && (
-          <div className="w-full max-w-md p-7 rounded-xl border border-zinc-900 bg-zinc-955/20 backdrop-blur-md text-center space-y-5 animate-slide-up">
+          <div className="w-full max-w-md p-7 rounded-xl border border-zinc-850/60 bg-zinc-955/20 backdrop-blur-md text-center space-y-5 animate-slide-up">
             
-            {/* Clean Gray Spinner */}
+            {/* Soft Amber Spinner */}
             <div className="relative inline-flex items-center justify-center mx-auto">
-              <div className="w-12 h-12 rounded-full border-2 border-zinc-900 border-t-zinc-300 animate-spin" />
+              <div className="w-12 h-12 rounded-full border-2 border-zinc-900 border-t-amber-500/80 animate-spin" />
               <div className="absolute text-zinc-550">
-                <FaSpinner className="text-xs animate-pulse" />
+                <FaSpinner className="text-xs animate-pulse text-amber-500/80" />
               </div>
             </div>
 
             <div className="space-y-1">
-              <h3 className="text-sm font-bold text-zinc-150 tracking-tight">Analyzing Codebase</h3>
-              <p className="text-xs text-zinc-455 h-5 transition-all">
+              <h3 className="text-sm font-serif text-zinc-150 tracking-wide">Looking Around</h3>
+              <p className="text-xs text-zinc-450 h-5 transition-all">
                 {loadingMessages[loadingStep]}
               </p>
             </div>
 
-            {/* Dynamic Progress Bar */}
+            {/* Warm Progress Bar */}
             <div className="w-full bg-zinc-900 h-0.5 rounded-full overflow-hidden">
               <div 
-                className="bg-zinc-350 h-full transition-all duration-500 ease-out"
+                className="bg-amber-500/70 h-full transition-all duration-500 ease-out"
                 style={{ width: `${((loadingStep + 1) / loadingMessages.length) * 100}%` }}
               />
             </div>
@@ -203,7 +204,7 @@ export default function App() {
                   className={`flex items-start gap-2.5 transition-all duration-200 ${index > loadingStep ? 'opacity-10' : 'opacity-100'}`}
                 >
                   <span className="text-zinc-650 font-bold select-none">&gt;</span>
-                  <span className={index === loadingStep ? 'text-zinc-200 font-semibold' : ''}>
+                  <span className={index === loadingStep ? 'text-amber-250 font-semibold' : ''}>
                     {msg} {index < loadingStep && '✓'}
                   </span>
                 </div>
@@ -218,10 +219,10 @@ export default function App() {
           <div className="w-full max-w-5xl flex flex-col space-y-5 py-6 animate-fade-in">
             
             {/* Dashboard Header Bar */}
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-zinc-955/20 border border-zinc-900 backdrop-blur-sm">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-zinc-955/20 border border-zinc-850/60 backdrop-blur-sm">
               <div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded border border-zinc-800 bg-zinc-900 text-zinc-400 uppercase tracking-tight">Repository</span>
+                  <span className="text-[9px] font-bold px-1.5 py-0.5 rounded border border-amber-900/20 bg-amber-950/5 text-amber-200/80 uppercase tracking-tight">Repository</span>
                   <h3 className="text-sm font-bold text-zinc-100 tracking-tight">
                     {repoData.repository.split('/').filter(Boolean).pop()}
                   </h3>
@@ -230,9 +231,9 @@ export default function App() {
               </div>
               <button 
                 onClick={handleReset}
-                className="text-[11px] text-zinc-300 hover:text-white bg-zinc-900 hover:bg-zinc-850 px-4 py-2 rounded-lg border border-zinc-800 transition-colors font-semibold cursor-pointer"
+                className="text-[11px] text-amber-200/80 hover:text-amber-100 bg-zinc-900 hover:bg-zinc-850 px-4 py-2 rounded-lg border border-zinc-800 transition-colors font-semibold cursor-pointer"
               >
-                Reset Analysis
+                Reset Tour
               </button>
             </div>
 
@@ -240,13 +241,13 @@ export default function App() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
               
               {/* Left Column: Repository Tree Panel (4 Cols) */}
-              <div className="lg:col-span-4 flex flex-col rounded-xl bg-zinc-950/10 border border-zinc-900 backdrop-blur-sm overflow-hidden min-h-[440px] max-h-[600px]">
-                <div className="px-3.5 py-2.5 border-b border-zinc-900/60 bg-zinc-900/20 flex items-center gap-2">
-                  <FaFolder className="text-zinc-500 text-xs" />
-                  <span className="text-[10px] font-bold tracking-wider uppercase text-zinc-400">File Structure</span>
+              <div className="lg:col-span-4 flex flex-col rounded-xl bg-zinc-950/10 border border-zinc-850/60 backdrop-blur-sm overflow-hidden min-h-[440px] max-h-[600px]">
+                <div className="px-3.5 py-2.5 border-b border-zinc-850/60 bg-zinc-900/20 flex items-center gap-2">
+                  <FaCompass className="text-amber-500/70 text-xs" />
+                  <span className="text-[10px] font-bold tracking-wider uppercase text-zinc-400">Workspace Explorer</span>
                 </div>
                 <div className="p-4 flex-1 overflow-y-auto space-y-2.5">
-                  <div className="text-zinc-650 italic text-[9px] mb-1.5 font-mono">// Interactive codebase explorer</div>
+                  <div className="text-zinc-655 italic text-[9px] mb-1.5 font-mono">// Click folders to look inside</div>
                   <FileTree tree={repoData.tree} />
                 </div>
               </div>
@@ -255,25 +256,25 @@ export default function App() {
               <div className="lg:col-span-8 flex flex-col space-y-5 justify-between">
                 
                 {/* Tech Stack Panel */}
-                <div className="rounded-xl bg-zinc-950/10 border border-zinc-900 backdrop-blur-sm overflow-hidden">
-                  <div className="px-3.5 py-2.5 border-b border-zinc-900/60 bg-zinc-900/20 flex items-center gap-2">
-                    <FaMicrochip className="text-zinc-500 text-xs" />
-                    <span className="text-[10px] font-bold tracking-wider uppercase text-zinc-400">Detected Stack</span>
+                <div className="rounded-xl bg-zinc-950/10 border border-zinc-850/60 backdrop-blur-sm overflow-hidden">
+                  <div className="px-3.5 py-2.5 border-b border-zinc-850/60 bg-zinc-900/20 flex items-center gap-2">
+                    <FaLayerGroup className="text-amber-500/70 text-xs" />
+                    <span className="text-[10px] font-bold tracking-wider uppercase text-zinc-400">Technologies Used</span>
                   </div>
                   <div className="p-4 grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-900 text-center space-y-1">
+                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-850/60 text-center space-y-1">
                       <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider">Frontend</span>
                       <p className="text-[11px] font-bold text-zinc-200 truncate">{getBadgeString(repoData.technologies.frontend)}</p>
                     </div>
-                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-900 text-center space-y-1">
+                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-850/60 text-center space-y-1">
                       <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider">Backend</span>
                       <p className="text-[11px] font-bold text-zinc-200 truncate">{getBadgeString(repoData.technologies.backend)}</p>
                     </div>
-                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-900 text-center space-y-1">
+                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-850/60 text-center space-y-1">
                       <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider">Database</span>
                       <p className="text-[11px] font-bold text-zinc-200 truncate">{getBadgeString(repoData.technologies.databases)}</p>
                     </div>
-                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-900 text-center space-y-1">
+                    <div className="p-3 rounded-lg bg-zinc-955/20 border border-zinc-850/60 text-center space-y-1">
                       <span className="text-[8px] font-bold text-zinc-600 uppercase tracking-wider">Language</span>
                       <p className="text-[11px] font-bold text-zinc-200 truncate">{getBadgeString(repoData.technologies.languages)}</p>
                     </div>
@@ -281,14 +282,14 @@ export default function App() {
                 </div>
 
                 {/* AI Summary Panel */}
-                <div className="flex-1 rounded-xl bg-zinc-950/10 border border-zinc-900 backdrop-blur-sm overflow-hidden flex flex-col min-h-[290px] max-h-[460px]">
-                  <div className="px-3.5 py-2.5 border-b border-zinc-900/60 bg-zinc-900/20 flex items-center justify-between">
+                <div className="flex-1 rounded-xl bg-zinc-950/10 border border-zinc-850/60 backdrop-blur-sm overflow-hidden flex flex-col min-h-[290px] max-h-[460px]">
+                  <div className="px-3.5 py-2.5 border-b border-zinc-850/60 bg-zinc-900/20 flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <FaLightbulb className="text-zinc-500 text-xs" />
-                      <span className="text-[10px] font-bold tracking-wider uppercase text-zinc-400">AI Project Overview</span>
+                      <FaBookOpen className="text-amber-500/70 text-xs" />
+                      <span className="text-[10px] font-bold tracking-wider uppercase text-zinc-400">A Tour of the Codebase</span>
                     </div>
-                    <span className="text-[8px] font-bold text-emerald-400 bg-emerald-950/10 border border-emerald-900/15 px-2 py-0.5 rounded flex items-center gap-1">
-                      <FaCircleCheck className="text-[9px]" /> Verified
+                    <span className="text-[8px] font-bold text-amber-400 bg-amber-950/15 border border-amber-900/20 px-2 py-0.5 rounded flex items-center gap-1">
+                      <FaCircleCheck className="text-[9px]" /> Summary Ready
                     </span>
                   </div>
                   
